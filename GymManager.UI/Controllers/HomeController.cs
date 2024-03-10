@@ -14,8 +14,9 @@ namespace GymManager.UI.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            _logger.LogInformation("LogInformation");
-            _logger.LogError(new Exception("LogError"), null);
+            //_logger.LogInformation("LogInformation");
+            //_logger.LogError(new Exception("LogError"), null);
+            throw new Exception("Nie obsłużony błąd!!!!");
 
             return View();
         }

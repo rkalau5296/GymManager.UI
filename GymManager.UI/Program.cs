@@ -1,15 +1,17 @@
 using GymManager.Infrastructure;
 using GymManager.Application;
-using NLog.Extensions.Logging;
 using NLog.Web;
-using Microsoft.AspNetCore.Mvc.Razor;
 using GymManager.UI.Extension;
+using GymManager.UI.Middlewares;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Logging.ClearProviders();
 builder.Logging.SetMinimumLevel(LogLevel.Information);
 builder.Logging.AddNLogWeb();
+
+builder.Services.AddCultures();
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure();
@@ -27,15 +29,17 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-//var logger = app.Services.GetService<ILogger<Program>>();
-//if (app.Environment.IsDevelopment())
-//{
-//    logger.LogInformation("DEVELOPMENT MODE!!!");
-//}
-//else
-//{
-//    logger.LogInformation("PRODUCTION MODE!!!");
-//}
+app.UseMiddleware<ExceptionHandlerMiddleware>();
+
+var logger = app.Services.GetService<ILogger<Program>>();
+if (app.Environment.IsDevelopment())
+{
+    logger.LogInformation("DEVELOPMENT MODE!!!");
+}
+else
+{
+    logger.LogInformation("PRODUCTION MODE!!!");
+}
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
